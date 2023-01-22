@@ -38,12 +38,16 @@ const MORSE_TABLE = {
 };
 
 function decode(expr) {
+  const split = (arr, number, newArr) => {
+    let i = 0;
+    while (i < arr.length) {
+      newArr.push(arr.slice(i, i + number));
+      i += number;
+    }
+  };
+
   let splitByTen = [];
-  let i = 0;
-  while (i < expr.length) {
-    splitByTen.push(expr.slice(i, i + 10));
-    i += 10;
-  }
+  split(expr, 10, splitByTen);
 
   splitByTen = splitByTen.map((e) => {
     if (e === "**********") {
@@ -54,12 +58,8 @@ function decode(expr) {
 
   let splitByTwo = [];
   splitByTen.forEach((e) => {
-    let i = 0;
     let newArr = [];
-    while (i < e.length) {
-      newArr.push(e.slice(i, i + 2));
-      i += 2;
-    }
+    split(e, 2, newArr);
     splitByTwo.push(newArr);
   });
 
@@ -71,7 +71,7 @@ function decode(expr) {
   let replaced = [];
   filtered.forEach((e) => {
     let decoded = "";
-    e.filter((num) => {
+    e.forEach((num) => {
       if (num === "10") {
         decoded += num.replace("10", ".");
       } else {
